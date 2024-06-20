@@ -16,14 +16,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CustomTreeWidget.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mediadropwidget.cpp
 
 HEADERS += \
-    mainwindow.h
+    CustomTreeWidget.h \
+    mainwindow.h \
+    mediadropwidget.h
 
 FORMS += \
     mainwindow.ui
+
+MSVC{
+    QMAKE_CFLAGS +=/utf-8
+    QMAKE_CXXFLAGS+=/utf-8
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

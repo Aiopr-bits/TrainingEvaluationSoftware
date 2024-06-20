@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>560</height>
+    <height>566</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -117,6 +117,84 @@
         <property name="styleSheet">
          <string notr="true"/>
         </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>PushButton</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>PushButton</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>PushButton</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>PushButton</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider_7">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -148,76 +226,16 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QTreeWidget" name="treeWidget_3">
+          <widget class="CustomTreeWidget" name="treeWidgetProjectDirectory">
            <column>
             <property name="text">
              <string>工程项目</string>
             </property>
            </column>
-           <item>
-            <property name="text">
-             <string>项目1</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>训练视频</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>训练音频</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>训练曲线</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>文本数据</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>配置文件</string>
-             </property>
-            </item>
-           </item>
-           <item>
-            <property name="text">
-             <string>项目2</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>训练视频</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>训练音频</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>训练曲线</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>文本数据</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>配置文件</string>
-             </property>
-            </item>
-           </item>
           </widget>
          </item>
          <item>
-          <widget class="QTreeWidget" name="treeWidget">
+          <widget class="QTreeWidget" name="treeWidgetProjectConfiguration">
            <column>
             <property name="text">
              <string>工程配置</string>
@@ -246,7 +264,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTreeWidget" name="treeWidget_2">
+          <widget class="QTreeWidget" name="treeWidgetTainData">
            <column>
             <property name="text">
              <string>训练数据</string>
@@ -315,7 +333,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTreeWidget" name="treeWidget_4">
+          <widget class="QTreeWidget" name="treeWidgetTrainEvaluation">
            <column>
             <property name="text">
              <string>训练评价</string>
@@ -349,7 +367,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTreeWidget" name="treeWidget_5">
+          <widget class="QTreeWidget" name="treeWidgetDataDisplay">
            <column>
             <property name="text">
              <string>数据展示</string>
@@ -526,10 +544,16 @@
    <property name="text">
     <string>新建</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionOpen">
    <property name="text">
     <string>打开</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionClose">
@@ -608,6 +632,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CustomTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">customtreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
