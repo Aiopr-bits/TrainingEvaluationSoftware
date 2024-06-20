@@ -5,6 +5,7 @@
 #include <QMediaPlayer>
 #include <QVideoWidget>
 #include "mediadropwidget.h"
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void populateTree(const QString& directoryPath, QTreeWidgetItem* parentItem);
+
 
 private slots:
     void on_actionNew_triggered();
@@ -33,6 +37,7 @@ private slots:
     void onTwoSplitActionTriggered();
     void onOneSplitActionTriggered(); 
     void onTabWidgetCurrentChanged(int index);
+
 
 private:
     Ui::MainWindow *ui;

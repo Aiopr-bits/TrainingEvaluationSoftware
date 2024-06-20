@@ -16,20 +16,20 @@ class MediaDropWidget : public QWidget {
 
 public:
     explicit MediaDropWidget(QWidget* parent = nullptr);
-
-protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
-
-private:
+    void resizeEvent(QResizeEvent* event) override;
     void playVideo(const QString& filePath);
     void showImage(const QString& filePath);
     void playAudio(const QString& filePath);
+    void adjustImageLabelSize();
 
+private:
     QMediaPlayer* videoPlayer;
     QMediaPlayer* audioPlayer;
     QVideoWidget* videoWidget;
     QLabel* imageLabel;
+    QPixmap currentPixmap;
 };
 
 #endif // MEDIADROPWIDGET_H

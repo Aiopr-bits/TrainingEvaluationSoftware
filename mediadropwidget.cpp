@@ -13,12 +13,12 @@ MediaDropWidget::MediaDropWidget(QWidget* parent)
     videoWidget->setVisible(false);
     imageLabel->setVisible(false);
     imageLabel->setAlignment(Qt::AlignCenter);
+    imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    imageLabel->setScaledContents(false);
 
     layout->addWidget(videoWidget);
     layout->addWidget(imageLabel);
-
     videoPlayer->setVideoOutput(videoWidget);
-
     setLayout(layout);
 
     // 设置背景颜色为黑色
@@ -69,8 +69,17 @@ void MediaDropWidget::playVideo(const QString& filePath) {
 void MediaDropWidget::showImage(const QString& filePath) {
     videoWidget->setVisible(false);
     imageLabel->setVisible(true);
-    QPixmap pixmap(filePath);
-    imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    currentPixmap = QPixmap(filePath);
+    adjustImageLabelSize();
+}
+
+void MediaDropWidget::adjustImageLabelSize() {
+    if (!currentPixmap.isNull()) {
+        QSize widgetSize = imageLabel->size();
+        QSize pixmapSize = currentPixmap.size();
+        pixmapSize.scale(widgetSize, Qt::KeepAspectRatio);
+        imageLabel->setPixmap(currentPixmap.scaled(pixmapSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
 }
 
 void MediaDropWidget::playAudio(const QString& filePath) {
@@ -80,3 +89,11 @@ void MediaDropWidget::playAudio(const QString& filePath) {
     audioPlayer->setMedia(QUrl::fromLocalFile(filePath));
     audioPlayer->play();
 }
+
+void MediaDropWidget::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+    adjustImageLabelSize();
+}
+
+
+
