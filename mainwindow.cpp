@@ -62,27 +62,22 @@ MainWindow::MainWindow(QWidget* parent)
 	projectAction->setCheckable(true);
 	configAction = new QAction(QString::fromLocal8Bit("工程配置"), this);
 	configAction->setCheckable(true);
-	dataAction = new QAction(QString::fromLocal8Bit("训练数据"), this);
-	dataAction->setCheckable(true);
 	evaluationAction = new QAction(QString::fromLocal8Bit("训练评价"), this);
 	evaluationAction->setCheckable(true);
 	displayAction = new QAction(QString::fromLocal8Bit("数据展示"), this);
 	displayAction->setCheckable(true);
 	workSpaceMenu->addAction(projectAction);
 	workSpaceMenu->addAction(configAction);
-	workSpaceMenu->addAction(dataAction);
 	workSpaceMenu->addAction(evaluationAction);
 	workSpaceMenu->addAction(displayAction);
 	ui->actionWorkSpace->setMenu(workSpaceMenu);
 	projectAction->setChecked(true);
 	configAction->setChecked(true);
-	dataAction->setChecked(true);
 	evaluationAction->setChecked(true);
 	displayAction->setChecked(true);
 
 	connect(projectAction, &QAction::triggered, this, &MainWindow::onProjectActionTriggered);
 	connect(configAction, &QAction::triggered, this, &MainWindow::onConfigActionTriggered);
-	connect(dataAction, &QAction::triggered, this, &MainWindow::onDataActionTriggered);
 	connect(evaluationAction, &QAction::triggered, this, &MainWindow::onEvaluationActionTriggered);
 	connect(displayAction, &QAction::triggered, this, &MainWindow::onDisplayActionTriggered);
 
@@ -204,16 +199,6 @@ void MainWindow::onConfigActionTriggered(bool checked)
 	}
 	else {
 		ui->treeWidgetProjectConfiguration->hide();
-	}
-}
-
-void MainWindow::onDataActionTriggered(bool checked)
-{
-	if (checked) {
-		ui->treeWidgetTainData->show();
-	}
-	else {
-		ui->treeWidgetTainData->hide();
 	}
 }
 

@@ -29,7 +29,6 @@ private slots:
 
     void onProjectActionTriggered(bool checked);
     void onConfigActionTriggered(bool checked);
-    void onDataActionTriggered(bool checked);
     void onEvaluationActionTriggered(bool checked);
     void onDisplayActionTriggered(bool checked);
 
@@ -61,7 +60,6 @@ private:
 
     QAction* projectAction;
     QAction* configAction;
-    QAction* dataAction;
     QAction* evaluationAction;
     QAction* displayAction;
 
