@@ -21,7 +21,7 @@ MediaDropWidget::MediaDropWidget(QWidget* parent)
     videoPlayer->setVideoOutput(videoWidget);
     setLayout(layout);
 
-    // ÉèÖÃ±³¾°ÑÕÉ«ÎªºÚÉ«
+    //è®¾ç½®èƒŒæ™¯çª—å£ä¸ºé»‘è‰²
     QPalette palette = this->palette();
     palette.setColor(QPalette::Window, Qt::black);
     this->setAutoFillBackground(true);
@@ -62,7 +62,7 @@ void MediaDropWidget::dropEvent(QDropEvent* event) {
 void MediaDropWidget::playVideo(const QString& filePath) {
     videoWidget->setVisible(true);
     imageLabel->setVisible(false);
-    videoPlayer->setMedia(QUrl::fromLocalFile(filePath));
+    videoPlayer->setSource(QUrl::fromLocalFile(filePath));
     videoPlayer->play();
 }
 
@@ -86,7 +86,7 @@ void MediaDropWidget::playAudio(const QString& filePath) {
     videoWidget->setVisible(false);
     imageLabel->setVisible(true);
     imageLabel->setText("Playing audio: " + filePath);
-    audioPlayer->setMedia(QUrl::fromLocalFile(filePath));
+    audioPlayer->setSource(QUrl::fromLocalFile(filePath));
     audioPlayer->play();
 }
 

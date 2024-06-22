@@ -6,6 +6,7 @@
 #include <QVideoWidget>
 #include "mediadropwidget.h"
 #include <QTreeWidgetItem>
+#include "projectdatamanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,12 +35,13 @@ private slots:
 
     void onFourSplitActionTriggered();
     void onTwoSplitActionTriggered();
-    void onOneSplitActionTriggered(); 
+    void onOneSplitActionTriggered();
     void onTabWidgetCurrentChanged(int index);
 
 
 private:
     Ui::MainWindow *ui;
+    ProjectDataManager * projectDataManager;
 
     //// View 1
     MediaDropWidget* mediaDropWidgetView1LeftTop;
