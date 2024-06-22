@@ -132,7 +132,7 @@
              <item>
               <widget class="QSlider" name="horizontalSlider">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -150,7 +150,7 @@
              <item>
               <widget class="QSlider" name="horizontalSlider_5">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -168,7 +168,7 @@
              <item>
               <widget class="QSlider" name="horizontalSlider_6">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -186,7 +186,7 @@
              <item>
               <widget class="QSlider" name="horizontalSlider_7">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -226,7 +226,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="CustomTreeWidget" name="treeWidgetProjectDirectory">
+          <widget class="QTreeWidget" name="treeWidgetProjectDirectory">
            <column>
             <property name="text">
              <string>工程项目</string>
@@ -463,7 +463,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProject">
@@ -632,13 +632,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>CustomTreeWidget</class>
-   <extends>QTreeWidget</extends>
-   <header location="global">customtreewidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

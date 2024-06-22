@@ -10,13 +10,6 @@
 
 using json = nlohmann::json;
 
-//class TreeNode {
-//public:
-//    std::string value;
-//    std::vector<std::shared_ptr<TreeNode>> children;
-//
-//    TreeNode(const std::string& val);
-//};
 
 struct TreeNode {
     std::string value;
@@ -43,27 +36,6 @@ private:
     TreeNode* root;
 };
 
-
-//class DirectoryTree {
-//private:
-//    std::shared_ptr<TreeNode> root;
-//    std::map<std::string, std::shared_ptr<TreeNode>> nodes;
-//
-//    void deleteSubTree(const std::shared_ptr<TreeNode>& node);
-//    void fromJson(const json& j, const std::shared_ptr<TreeNode>& node);
-//
-//public:
-//    DirectoryTree();
-//
-//    void addChild(const std::string& parentValue, const std::string& childValue);
-//    void deleteNode(const std::string& nodeValue);
-//    void clearTree();
-//    void dfsTraversal(const std::shared_ptr<TreeNode>& node) const;
-//    void printDFSTraversal() const;
-//    json toJson(const std::shared_ptr<TreeNode>& node) const;
-//    json getTreeJson() const;
-//    void buildTreeFromJson(const json& j);
-//};
 
 #endif // DIRECTORY_TREE_H
 

@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 
     void populateTree(const QString& directoryPath, QTreeWidgetItem* parentItem);
+    void updatePanel();
 
 
 private slots:

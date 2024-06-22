@@ -20,15 +20,17 @@ class ProjectDataManager
 public:
     ProjectDataManager();
     ~ProjectDataManager();
-
-    static std::vector<projectUnit> projectList;
+   
     static void addProject(json project);
     static void removeProject(std::string projectName);
     static std::vector<projectUnit> getProjectList();
     static projectUnit getProject(std::string projectName);
     static bool isProjectModified(projectUnit project);
 
-    //test
+    static std::vector<projectUnit> projectList;
+    static size_t projectCurrentIndex;
+
+    //测试用
     static void printProjectList();
 };
 

@@ -3,6 +3,7 @@
 
 //静态变量初始化
 std::vector<projectUnit> ProjectDataManager::projectList = std::vector<projectUnit>();
+size_t ProjectDataManager::projectCurrentIndex = -1;
 
 ProjectDataManager::ProjectDataManager()
 {
@@ -79,7 +80,7 @@ void ProjectDataManager::removeProject(std::string projectName)
 
 std::vector<projectUnit> ProjectDataManager::getProjectList()
 {
-    return std::vector<projectUnit>();
+    return projectList;
 }
 
 #include <stdexcept>
