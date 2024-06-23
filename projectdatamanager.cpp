@@ -15,7 +15,7 @@ ProjectDataManager::~ProjectDataManager()
 
 }
 
-void ProjectDataManager::addProject(json json)
+void ProjectDataManager::addProject(json json, QString projectPath)
 {
     projectUnit newProject;
 
@@ -62,6 +62,8 @@ void ProjectDataManager::addProject(json json)
     if (json.contains("databaseVersion") && json["databaseVersion"].is_string()) {
         newProject.databaseVersion = json["databaseVersion"].get<std::string>();
     }
+
+    newProject.projectPath = projectPath.toStdString();
 
     projectList.push_back(newProject);
 }

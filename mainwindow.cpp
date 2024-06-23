@@ -16,14 +16,6 @@ MainWindow::MainWindow(QWidget* parent)
 	ui->setupUi(this);
 	this->showMaximized();
 
-	////窗口风格设置
-	//QPalette pal = this->palette();
-	//pal.setColor(QPalette::Background, QColor(79, 79, 79));
-	//this->setPalette(pal);
-	//this->setStyleSheet("border: 2px solid rgb(79,79,79);");
-	//ui->menubar->setStyleSheet("background-color:rgb(79,79,79);");
-	//ui->menubar->setStyleSheet("QMenuBar { color: white; }");
-
 	//工程项目树初始化
 	projectDataManager = new ProjectDataManager();
 
@@ -323,8 +315,8 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::on_actionOpen_triggered()
 {
 	//test
-	QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
-	//QString fileName = QString("C:/Users/Aiopr/Desktop/工程/test.xljp");
+	//QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
+	QString fileName = QString("C:/Users/Aiopr/Desktop/工程/test.xljp");
 
 	QFile file(fileName);
 	json doc;
@@ -345,7 +337,8 @@ void MainWindow::on_actionOpen_triggered()
 		return;
 	}
 
-	projectDataManager->addProject(doc);
+	QString projectPath = fileName.left(fileName.lastIndexOf("/"));
+	projectDataManager->addProject(doc, projectPath);
 	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1;	
 	updatePanel();
 	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
@@ -562,6 +555,8 @@ void MainWindow::onTabWidgetCurrentChanged(int index)
 
 void MainWindow::on_treeWidgetProjectDirectory_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous)
 {
+	Q_UNUSED(previous);
+
 	int index = ui->treeWidgetProjectDirectory->indexOfTopLevelItem(current);
 	if (index >= 0) {
 		ProjectDataManager::projectCurrentIndex = index;

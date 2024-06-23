@@ -12,7 +12,7 @@
 #include <QVBoxLayout>
 
 class MediaDropWidget : public QWidget {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     explicit MediaDropWidget(QWidget* parent = nullptr);
@@ -30,6 +30,8 @@ private:
     QVideoWidget* videoWidget;
     QLabel* imageLabel;
     QPixmap currentPixmap;
+    QAudioOutput* videoAudioOutput;
+    QAudioOutput* audioAudioOutput;   
 };
 
 #endif // MEDIADROPWIDGET_H
