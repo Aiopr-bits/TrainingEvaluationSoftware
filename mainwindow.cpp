@@ -169,7 +169,7 @@ void MainWindow::updatePanel()
 		projectItem->setText(0, QString::fromStdString(ProjectDataManager::getProjectList()[i].projectName));
 		ui->treeWidgetProjectDirectory->addTopLevelItem(projectItem);
 	}
-	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
+	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(static_cast<int>(ProjectDataManager::projectCurrentIndex)));
 
 	//更新训练数据树
 	ui->treeWidgetTainData->clear();
@@ -331,11 +331,10 @@ void MainWindow::on_actionOpen_triggered()
 		
 		try {
 			doc = json::parse(firstLine.toStdString());
-			std::cout << doc.dump(4);
 		}
-		catch (json::parse_error& e) {
+		catch (json::parse_error&) { 
 			QMessageBox::warning(this, "警告", "JSON格式不合法！");
-			return; 
+			return;
 		}
 	}
 	else {
@@ -353,7 +352,7 @@ void MainWindow::on_actionOpen_triggered()
 	projectDataManager->addProject(doc, projectPath);
 	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1;	
 	updatePanel();
-	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
+	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(static_cast<int>(ProjectDataManager::projectCurrentIndex)));
 
 }
 
@@ -364,7 +363,6 @@ bool MainWindow::isProjectTreeFilesExist(const QString& base_path, const json& s
 		QString current_path = QDir(base_path).filePath(key);
 
 		if (!QFileInfo::exists(current_path)) {
-			std::cout << "不存在: " << current_path.toStdString() << std::endl;
 			QString message = "文件不存在: " + key;
 			QMessageBox::warning(this, "警告", message);
 			return false;
