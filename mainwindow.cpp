@@ -7,7 +7,10 @@
 #include "mediadropwidget.h"
 #include "json.hpp"
 #include <QActionGroup>
+#include <filesystem>
+
 using json = nlohmann::json;
+
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
@@ -320,30 +323,62 @@ void MainWindow::on_actionOpen_triggered()
 
 	QFile file(fileName);
 	json doc;
+
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QTextStream in(&file);
 		QString firstLine = in.readLine();
 		file.close();
-		doc = json::parse(firstLine.toStdString());
-
-		if (doc.is_null()) {
-			QMessageBox::warning(this, "警告", "无法解析JSON!");
-			return;
+		
+		try {
+			doc = json::parse(firstLine.toStdString());
+			std::cout << doc.dump(4);
 		}
-
+		catch (json::parse_error& e) {
+			QMessageBox::warning(this, "警告", "JSON格式不合法！");
+			return; 
+		}
 	}
 	else {
 		QMessageBox::warning(this, "警告", "打开文件失败!");
 		return;
 	}
 
+
+	json projectTree = doc["projectTree"];
 	QString projectPath = fileName.left(fileName.lastIndexOf("/"));
+	if (!isProjectTreeFilesExist(projectPath, projectTree)) {
+		return;
+	}
+
 	projectDataManager->addProject(doc, projectPath);
 	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1;	
 	updatePanel();
 	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
 
 }
+
+
+bool MainWindow::isProjectTreeFilesExist(const QString& base_path, const json& structure) {
+	for (auto& el : structure.items()) {
+		QString key = QString::fromUtf8(el.key().c_str());
+		QString current_path = QDir(base_path).filePath(key);
+
+		if (!QFileInfo::exists(current_path)) {
+			std::cout << "不存在: " << current_path.toStdString() << std::endl;
+			QString message = "文件不存在: " + key;
+			QMessageBox::warning(this, "警告", message);
+			return false;
+		}
+		if (el.value().is_object()) {
+			if (!isProjectTreeFilesExist(current_path, el.value())) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+
 
 void MainWindow::on_actionClose_triggered()
 {

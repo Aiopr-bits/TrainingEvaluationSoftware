@@ -12,6 +12,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+namespace fs = std::filesystem;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,6 +29,7 @@ public:
 private slots:
     void on_actionNew_triggered();
     void on_actionOpen_triggered();
+    bool isProjectTreeFilesExist(const QString& base_path, const json& structure);
     void on_actionClose_triggered();
 
     void onProjectActionTriggered(bool checked);
