@@ -98,6 +98,11 @@ projectUnit ProjectDataManager::getProject(std::string projectName)
     throw std::runtime_error("Project not found: " + projectName);
 }
 
+projectUnit ProjectDataManager::getProject(size_t index)
+{
+    return projectList[index];
+}
+
 bool ProjectDataManager::isProjectModified(projectUnit project)
 {
     bool isModified = false;

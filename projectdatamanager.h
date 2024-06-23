@@ -25,6 +25,7 @@ public:
     static void removeProject(std::string projectName);
     static std::vector<projectUnit> getProjectList();
     static projectUnit getProject(std::string projectName);
+    static projectUnit getProject(size_t index);
     static bool isProjectModified(projectUnit project);
 
     static std::vector<projectUnit> projectList;

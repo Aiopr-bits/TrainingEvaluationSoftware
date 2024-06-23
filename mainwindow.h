@@ -41,6 +41,8 @@ private slots:
     void onTabWidgetCurrentChanged(int index);
 
 
+    void on_treeWidgetProjectDirectory_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+
 private:
     Ui::MainWindow *ui;
     ProjectDataManager * projectDataManager;

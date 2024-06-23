@@ -174,8 +174,143 @@ void MainWindow::updatePanel()
 		projectItem->setText(0, QString::fromStdString(ProjectDataManager::getProjectList()[i].projectName));
 		ui->treeWidgetProjectDirectory->addTopLevelItem(projectItem);
 	}
+	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
 
-	//待补充
+	//更新训练数据树
+	ui->treeWidgetTainData->clear();
+	projectUnit project = ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex];
+	DirectoryTree projectTree = project.projectTree;
+
+
+	TreeNode* videoNode = projectTree.findNode(projectTree.getRoot(), "视频");
+	if (videoNode != nullptr) {
+		QTreeWidgetItem* videoItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+		videoItem->setText(0, "训练视频");
+		ui->treeWidgetTainData->addTopLevelItem(videoItem);
+
+		size_t videoNodeChildrenCount = videoNode->children.size();
+		for (int j = 0; j < videoNodeChildrenCount; ++j) {
+			TreeNode* videoNodeChild = videoNode->children[j];
+			QTreeWidgetItem* videoSubItem = new QTreeWidgetItem(videoItem);
+			videoSubItem->setText(0, QString::fromStdString(videoNodeChild->value));
+			videoItem->addChild(videoSubItem);
+		}
+	}
+
+
+
+	TreeNode* audioNode = projectTree.findNode(projectTree.getRoot(), "音频");
+	if (audioNode != nullptr) {
+		QTreeWidgetItem* audioItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+		audioItem->setText(0, "训练音频");
+		ui->treeWidgetTainData->addTopLevelItem(audioItem);
+
+		size_t audioNodeChildrenCount = audioNode->children.size();
+		for (int j = 0; j < audioNodeChildrenCount; ++j) {
+			TreeNode* audioNodeChild = audioNode->children[j];
+			QTreeWidgetItem* audioSubItem = new QTreeWidgetItem(audioItem);
+			audioSubItem->setText(0, QString::fromStdString(audioNodeChild->value));
+			audioItem->addChild(audioSubItem);
+		}
+	}
+
+
+
+	TreeNode* flightParameterNode = projectTree.findNode(projectTree.getRoot(), "飞行参数数据");
+	if (flightParameterNode != nullptr) {
+		QTreeWidgetItem* flightParameterItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+		flightParameterItem->setText(0, "飞行参数数据");
+		ui->treeWidgetTainData->addTopLevelItem(flightParameterItem);
+
+		size_t flightParameterNodeChildrenCount = flightParameterNode->children.size();
+		for (int j = 0; j < flightParameterNodeChildrenCount; ++j) {
+			TreeNode* flightParameterNodeChild = flightParameterNode->children[j];
+			QTreeWidgetItem* flightParameterSubItem = new QTreeWidgetItem(flightParameterItem);
+			flightParameterSubItem->setText(0, QString::fromStdString(flightParameterNodeChild->value));
+			flightParameterItem->addChild(flightParameterSubItem);
+		}
+	}
+
+
+
+	TreeNode* eventAndTimeNode = projectTree.findNode(projectTree.getRoot(), "事件及其时间信息");
+	if (eventAndTimeNode != nullptr) {
+		QTreeWidgetItem* eventAndTimeItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+		eventAndTimeItem->setText(0, "事件及其时间信息");
+		ui->treeWidgetTainData->addTopLevelItem(eventAndTimeItem);
+
+		size_t eventAndTimeNodeChildrenCount = eventAndTimeNode->children.size();
+		for (int j = 0; j < eventAndTimeNodeChildrenCount; ++j) {
+			TreeNode* eventAndTimeNodeChild = eventAndTimeNode->children[j];
+			QTreeWidgetItem* eventAndTimeSubItem = new QTreeWidgetItem(eventAndTimeItem);
+			eventAndTimeSubItem->setText(0, QString::fromStdString(eventAndTimeNodeChild->value));
+			eventAndTimeItem->addChild(eventAndTimeSubItem);
+		}
+	}
+
+
+
+	//更新训练评价树
+	ui->treeWidgetTrainEvaluation->clear();
+
+	TreeNode* reportDocumentNode = projectTree.findNode(projectTree.getRoot(), "报告文档");
+	if (reportDocumentNode != nullptr) {
+		QTreeWidgetItem* reportDocument = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+		reportDocument->setText(0, "报告文档");
+		ui->treeWidgetTrainEvaluation->addTopLevelItem(reportDocument);
+
+		size_t reportDocumentNodeChildrenCount = reportDocumentNode->children.size();
+		for (int j = 0; j < reportDocumentNodeChildrenCount; ++j) {
+			TreeNode* reportDocumentNodeChild = reportDocumentNode->children[j];
+			QTreeWidgetItem* reportDocumentSubItem = new QTreeWidgetItem(reportDocument);
+			reportDocumentSubItem->setText(0, QString::fromStdString(reportDocumentNodeChild->value));
+			reportDocument->addChild(reportDocumentSubItem);
+		}
+	}
+
+
+	TreeNode* scoreDataNode = projectTree.findNode(projectTree.getRoot(), "成绩数据");
+	if (scoreDataNode != nullptr) {
+		QTreeWidgetItem* scoreData = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+		scoreData->setText(0, "成绩数据");
+
+		ui->treeWidgetTrainEvaluation->addTopLevelItem(scoreData);
+		size_t scoreDataNodeChildrenCount = scoreDataNode->children.size();
+		for (int j = 0; j < scoreDataNodeChildrenCount; ++j) {
+			TreeNode* scoreDataNodeChild = scoreDataNode->children[j];
+			QTreeWidgetItem* scoreDataSubItem = new QTreeWidgetItem(scoreData);
+			scoreDataSubItem->setText(0, QString::fromStdString(scoreDataNodeChild->value));
+			scoreData->addChild(scoreDataSubItem);
+		}
+	}
+
+
+	TreeNode* imageNode = projectTree.findNode(projectTree.getRoot(), "图片");
+	if (imageNode != nullptr) {
+		QTreeWidgetItem* image = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+		image->setText(0, "图片");
+		ui->treeWidgetTrainEvaluation->addTopLevelItem(image);
+
+		size_t imageNodeChildrenCount = imageNode->children.size();
+		for (int j = 0; j < imageNodeChildrenCount; ++j) {
+			TreeNode* imageNodeChild = imageNode->children[j];
+			QTreeWidgetItem* imageSubItem = new QTreeWidgetItem(image);
+			imageSubItem->setText(0, QString::fromStdString(imageNodeChild->value));
+			image->addChild(imageSubItem);
+		}
+	}
+
+
+	//更新工程配置
+
+
+
+
+
+	//更新数据展示
+
+
+
 
 }
 
@@ -187,32 +322,9 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-	////QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
-	//QString fileName = QString::fromLocal8Bit("C:/Users/Aiopr/Desktop/工程/测试.xljp");
-	//if (!fileName.isEmpty()) {
-	//	QString path = fileName.left(fileName.lastIndexOf("/"));
-	//	QDir dir(path + QString::fromLocal8Bit("/训练数据"));
-	//	if (!dir.exists()) {
-	//		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("训练数据文件夹不存在！"));
-	//		return;
-	//	}
-
-	//	// 在工程项目树中添加项目
-	//	QFileInfo fileInfo(fileName);
-	//	QString baseName = fileInfo.baseName();
-	//	QTreeWidgetItem* projectItem = new QTreeWidgetItem(ui->treeWidgetProjectDirectory);
-	//	projectItem->setText(0, baseName);
-	//	ui->treeWidgetProjectDirectory->addTopLevelItem(projectItem);
-	//	QString rootDir(path + QString::fromLocal8Bit("/训练数据"));
-	//	populateTree(rootDir, projectItem);
-	//}
-
-
-
-
 	//test
-	//QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
-	QString fileName = QString("C:/Users/Aiopr/Desktop/工程/test.xljp");
+	QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
+	//QString fileName = QString("C:/Users/Aiopr/Desktop/工程/test.xljp");
 
 	QFile file(fileName);
 	json doc;
@@ -234,9 +346,10 @@ void MainWindow::on_actionOpen_triggered()
 	}
 
 	projectDataManager->addProject(doc);
-	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1 + 1;
-
+	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1;	
 	updatePanel();
+	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(ProjectDataManager::projectCurrentIndex));
+
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -445,4 +558,152 @@ void MainWindow::onTabWidgetCurrentChanged(int index)
 
 
 
+
+
+void MainWindow::on_treeWidgetProjectDirectory_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous)
+{
+	int index = ui->treeWidgetProjectDirectory->indexOfTopLevelItem(current);
+	if (index >= 0) {
+		ProjectDataManager::projectCurrentIndex = index;
+
+
+		//更新训练数据树
+		ui->treeWidgetTainData->clear();
+		projectUnit project = ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex];
+		DirectoryTree projectTree = project.projectTree;
+
+
+		TreeNode* videoNode = projectTree.findNode(projectTree.getRoot(), "视频");
+		if (videoNode != nullptr) {
+			QTreeWidgetItem* videoItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+			videoItem->setText(0, "训练视频");
+			ui->treeWidgetTainData->addTopLevelItem(videoItem);
+
+			size_t videoNodeChildrenCount = videoNode->children.size();
+			for (int j = 0; j < videoNodeChildrenCount; ++j) {
+				TreeNode* videoNodeChild = videoNode->children[j];
+				QTreeWidgetItem* videoSubItem = new QTreeWidgetItem(videoItem);
+				videoSubItem->setText(0, QString::fromStdString(videoNodeChild->value));
+				videoItem->addChild(videoSubItem);
+			}
+		}
+
+
+
+		TreeNode* audioNode = projectTree.findNode(projectTree.getRoot(), "音频");
+		if (audioNode != nullptr) {
+			QTreeWidgetItem* audioItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+			audioItem->setText(0, "训练音频");
+			ui->treeWidgetTainData->addTopLevelItem(audioItem);
+
+			size_t audioNodeChildrenCount = audioNode->children.size();
+			for (int j = 0; j < audioNodeChildrenCount; ++j) {
+				TreeNode* audioNodeChild = audioNode->children[j];
+				QTreeWidgetItem* audioSubItem = new QTreeWidgetItem(audioItem);
+				audioSubItem->setText(0, QString::fromStdString(audioNodeChild->value));
+				audioItem->addChild(audioSubItem);
+			}
+		}
+
+
+
+		TreeNode* flightParameterNode = projectTree.findNode(projectTree.getRoot(), "飞行参数数据");
+		if (flightParameterNode != nullptr) {
+			QTreeWidgetItem* flightParameterItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+			flightParameterItem->setText(0, "飞行参数数据");
+			ui->treeWidgetTainData->addTopLevelItem(flightParameterItem);
+
+			size_t flightParameterNodeChildrenCount = flightParameterNode->children.size();
+			for (int j = 0; j < flightParameterNodeChildrenCount; ++j) {
+				TreeNode* flightParameterNodeChild = flightParameterNode->children[j];
+				QTreeWidgetItem* flightParameterSubItem = new QTreeWidgetItem(flightParameterItem);
+				flightParameterSubItem->setText(0, QString::fromStdString(flightParameterNodeChild->value));
+				flightParameterItem->addChild(flightParameterSubItem);
+			}
+		}
+
+
+
+		TreeNode* eventAndTimeNode = projectTree.findNode(projectTree.getRoot(), "事件及其时间信息");
+		if (eventAndTimeNode != nullptr) {
+			QTreeWidgetItem* eventAndTimeItem = new QTreeWidgetItem(ui->treeWidgetTainData);
+			eventAndTimeItem->setText(0, "事件及其时间信息");
+			ui->treeWidgetTainData->addTopLevelItem(eventAndTimeItem);
+
+			size_t eventAndTimeNodeChildrenCount = eventAndTimeNode->children.size();
+			for (int j = 0; j < eventAndTimeNodeChildrenCount; ++j) {
+				TreeNode* eventAndTimeNodeChild = eventAndTimeNode->children[j];
+				QTreeWidgetItem* eventAndTimeSubItem = new QTreeWidgetItem(eventAndTimeItem);
+				eventAndTimeSubItem->setText(0, QString::fromStdString(eventAndTimeNodeChild->value));
+				eventAndTimeItem->addChild(eventAndTimeSubItem);
+			}
+		}
+
+
+
+		//更新训练评价树
+		ui->treeWidgetTrainEvaluation->clear();
+
+		TreeNode* reportDocumentNode = projectTree.findNode(projectTree.getRoot(), "报告文档");
+		if (reportDocumentNode != nullptr) {
+			QTreeWidgetItem* reportDocument = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+			reportDocument->setText(0, "报告文档");
+			ui->treeWidgetTrainEvaluation->addTopLevelItem(reportDocument);
+
+			size_t reportDocumentNodeChildrenCount = reportDocumentNode->children.size();
+			for (int j = 0; j < reportDocumentNodeChildrenCount; ++j) {
+				TreeNode* reportDocumentNodeChild = reportDocumentNode->children[j];
+				QTreeWidgetItem* reportDocumentSubItem = new QTreeWidgetItem(reportDocument);
+				reportDocumentSubItem->setText(0, QString::fromStdString(reportDocumentNodeChild->value));
+				reportDocument->addChild(reportDocumentSubItem);
+			}
+		}
+
+
+		TreeNode* scoreDataNode = projectTree.findNode(projectTree.getRoot(), "成绩数据");
+		if (scoreDataNode != nullptr) {
+			QTreeWidgetItem* scoreData = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+			scoreData->setText(0, "成绩数据");
+
+			ui->treeWidgetTrainEvaluation->addTopLevelItem(scoreData);
+			size_t scoreDataNodeChildrenCount = scoreDataNode->children.size();
+			for (int j = 0; j < scoreDataNodeChildrenCount; ++j) {
+				TreeNode* scoreDataNodeChild = scoreDataNode->children[j];
+				QTreeWidgetItem* scoreDataSubItem = new QTreeWidgetItem(scoreData);
+				scoreDataSubItem->setText(0, QString::fromStdString(scoreDataNodeChild->value));
+				scoreData->addChild(scoreDataSubItem);
+			}
+		}
+
+
+		TreeNode* imageNode = projectTree.findNode(projectTree.getRoot(), "图片");
+		if (imageNode != nullptr) {
+			QTreeWidgetItem* image = new QTreeWidgetItem(ui->treeWidgetTrainEvaluation);
+			image->setText(0, "图片");
+			ui->treeWidgetTrainEvaluation->addTopLevelItem(image);
+
+			size_t imageNodeChildrenCount = imageNode->children.size();
+			for (int j = 0; j < imageNodeChildrenCount; ++j) {
+				TreeNode* imageNodeChild = imageNode->children[j];
+				QTreeWidgetItem* imageSubItem = new QTreeWidgetItem(image);
+				imageSubItem->setText(0, QString::fromStdString(imageNodeChild->value));
+				image->addChild(imageSubItem);
+			}
+		}
+
+
+		//更新工程配置
+
+
+
+
+
+		//更新数据展示
+
+
+
+
+
+	}
+}
 
