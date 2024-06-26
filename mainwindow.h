@@ -34,6 +34,8 @@ private slots:
     void on_actionImport_triggered();
     void on_actionExport_triggered();
     void on_actionExit_triggered();
+
+    void closeEvent(QCloseEvent* event);
     
 	//配置action
     void onProjectActionTriggered(bool checked);

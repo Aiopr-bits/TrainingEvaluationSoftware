@@ -11,6 +11,7 @@
 #include <fstream>
 #include <codecvt>
 #include <locale> 
+#include <QInputDialog>
 
 using json = nlohmann::json;
 
@@ -289,10 +290,71 @@ void MainWindow::updatePanel()
 
 }
 
+void createDirectoriesFromJson(const nlohmann::json& j, const QString& basePath) {
+	json projectTree = j["projectTree"];
+	for (auto& topLevelElement : projectTree.items()) {
+		fs::path topLevelPath = fs::path(basePath.toStdWString()) / fs::u8path(topLevelElement.key());
+		fs::create_directories(topLevelPath);
+		for (auto& subElement : topLevelElement.value().items()) {
+			fs::path subPath = topLevelPath / fs::u8path(subElement.key());
+			fs::create_directories(subPath);
+		}
+	}
+
+	QString projectName = QString::fromStdString(j["projectName"].get<std::string>());
+	std::wstring fileNameW = (projectName + ".xljp").toStdWString();
+	std::filesystem::path filePath = std::filesystem::path(basePath.toStdWString()) / fileNameW;
+	std::ofstream file(filePath, std::ios::out | std::ios::binary); 
+	if (file.is_open()) {
+		file << j.dump();
+		file.close();
+	}
+	else {
+		throw std::runtime_error("无法打开文件：" + filePath.string());
+	}
+}
+
 
 void MainWindow::on_actionNew_triggered()
 {
+	QString dir = QFileDialog::getExistingDirectory(this, tr("选择新建工程的目录"), "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	if (dir.isEmpty()) {
+		return;
+	}
+	QString projectName = QInputDialog::getText(this, "新建工程", "请输入工程名称");
+	if (projectName.isEmpty()) {
+		return;
+	}
 
+	json jsonProjectTree = {
+	{"训练数据", {
+		{"视频", {}},
+		{"音频", {}},
+		{"飞行参数数据", {}},
+		{"事件及其时间信息", {}}
+	}},
+	{"训练评价", {
+		{"报告文档", {}},
+		{"成绩数据", {}},
+		{"图片", {}}
+	}}
+	};
+
+	json j;
+	j["projectName"] = projectName.toStdString();
+	j["airplaneNumber"] = "0001";
+	j["readWritePermission"] = "rw";
+	j["applicableTerminals"] = "pc";
+	j["softwareVersion"] = "1.0.0";
+	j["databaseVersion"] = "1.0.0";
+	j["projectTree"] = jsonProjectTree;
+	j["projectPath"] = dir.toStdString();
+
+	projectDataManager->addProject(j, dir);
+	ProjectDataManager::projectCurrentIndex = (int)ProjectDataManager::getProjectList().size() - 1;
+	updatePanel();
+	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(static_cast<int>(ProjectDataManager::projectCurrentIndex)));
+	createDirectoriesFromJson(j, dir);
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -311,11 +373,11 @@ void MainWindow::on_actionOpen_triggered()
 		QTextStream in(&file);
 		QString firstLine = in.readLine();
 		file.close();
-		
+
 		try {
 			doc = json::parse(firstLine.toStdString());
 		}
-		catch (json::parse_error&) { 
+		catch (json::parse_error&) {
 			QMessageBox::warning(this, "警告", "JSON格式不合法！");
 			return;
 		}
@@ -333,7 +395,7 @@ void MainWindow::on_actionOpen_triggered()
 	}
 
 	projectDataManager->addProject(doc, projectPath);
-	ProjectDataManager::projectCurrentIndex =(int) ProjectDataManager::getProjectList().size() - 1;	
+	ProjectDataManager::projectCurrentIndex = (int)ProjectDataManager::getProjectList().size() - 1;
 	updatePanel();
 	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(static_cast<int>(ProjectDataManager::projectCurrentIndex)));
 
@@ -365,7 +427,7 @@ void MainWindow::on_actionClose_triggered()
 {
 	on_actionSave_triggered();
 	ProjectDataManager::removeProject(ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex].projectName);
-	ProjectDataManager::projectCurrentIndex  -= 1;
+	ProjectDataManager::projectCurrentIndex -= 1;
 	updatePanel();
 }
 
@@ -761,7 +823,7 @@ void MainWindow::on_actionSave_triggered()
 
 	if (projectList.size() == 1) {
 		QMessageBox::StandardButton reply;
-		reply = QMessageBox::question(this, "保存工程", "您想要保存对当前工程的更改吗？",QMessageBox::Yes  | QMessageBox::Cancel);
+		reply = QMessageBox::question(this, "保存工程", "您想要保存对当前工程的更改吗？", QMessageBox::Yes | QMessageBox::Cancel);
 		if (reply == QMessageBox::Yes) {
 			saveCurrentProject();
 			QMessageBox::information(this, "提示", "保存成功!");
@@ -785,7 +847,7 @@ void MainWindow::on_actionSave_triggered()
 		}
 		else if (msgBox.clickedButton() == saveAllButton) {
 			saveAllProject();
-		}	
+		}
 		else if (msgBox.clickedButton() == cancelButton) {
 			return;
 		}
@@ -804,10 +866,10 @@ void MainWindow::on_actionDelete_triggered()
 			std::wstring wPath = converter.from_bytes(projectPath);
 			std::filesystem::remove_all(wPath);
 			ProjectDataManager::removeProject(ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex].projectName);
-			ProjectDataManager::projectCurrentIndex -= 1;
+			ProjectDataManager::projectCurrentIndex = (int)ProjectDataManager::getProjectList().size() - 1;
 			updatePanel();
 		}
-		catch (const std::filesystem::filesystem_error& ) {
+		catch (const std::filesystem::filesystem_error&) {
 			QMessageBox::critical(this, "错误", "删除工程文件时发生错误。");
 		}
 	}
@@ -840,3 +902,22 @@ void MainWindow::on_actionExit_triggered()
 
 }
 
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+	QMessageBox::StandardButton reply = QMessageBox::question(this, "退出确认", "是否保存所有项目？",QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+	switch (reply) {
+	case QMessageBox::Yes:
+		saveAllProject();
+		event->accept(); 
+		break;
+	case QMessageBox::No:
+		event->accept(); 
+		break;
+	case QMessageBox::Cancel:
+		event->ignore(); 
+		break;
+	default:
+		event->ignore(); 
+		break;
+	}
+}
