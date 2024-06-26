@@ -8,6 +8,9 @@
 #include "json.hpp"
 #include <QActionGroup>
 #include <filesystem>
+#include <fstream>
+#include <codecvt>
+#include <locale> 
 
 using json = nlohmann::json;
 
@@ -18,6 +21,15 @@ MainWindow::MainWindow(QWidget* parent)
 {
 	ui->setupUi(this);
 	this->showMaximized();
+
+	//树控件初始化
+	ui->treeWidgetProjectDirectory->header()->setFixedHeight(25);
+	ui->treeWidgetDataDisplay->header()->setFixedHeight(25);
+	ui->treeWidgetProjectConfiguration->header()->setFixedHeight(25);
+	ui->treeWidgetTainData->header()->setFixedHeight(25);
+	ui->treeWidgetTrainEvaluation->header()->setFixedHeight(25);
+
+
 
 	//工程项目树初始化
 	projectDataManager = new ProjectDataManager();
@@ -126,42 +138,17 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::populateTree(const QString& directoryPath, QTreeWidgetItem* parentItem)
-{
-	QDir dir(directoryPath);
-	QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-
-	for (int i = 0; i < fileInfoList.size(); ++i) {
-		QFileInfo fileInfo = fileInfoList.at(i);
-		QTreeWidgetItem* item;
-
-		if (parentItem == 0) {
-			item = new QTreeWidgetItem(ui->treeWidgetProjectDirectory, QStringList() << fileInfo.fileName());
-			item->setData(0, Qt::UserRole, fileInfo.absoluteFilePath());
-			ui->treeWidgetProjectDirectory->addTopLevelItem(item);
-		}
-		else {
-			item = new QTreeWidgetItem(parentItem, QStringList() << fileInfo.fileName());
-			item->setData(0, Qt::UserRole, fileInfo.absoluteFilePath());
-			parentItem->addChild(item);
-		}
-
-		if (fileInfo.isDir()) {
-			item->setFlags(item->flags() & ~Qt::ItemIsDragEnabled);
-			populateTree(fileInfo.absoluteFilePath(), item);
-		}
-		else {
-			item->setFlags(item->flags() | Qt::ItemIsDragEnabled);
-		}
-	}
-
-	if (parentItem) {
-		parentItem->setExpanded(true);
-	}
-}
-
 void MainWindow::updatePanel()
 {
+	if (ProjectDataManager::projectCurrentIndex < 0) {
+		ui->treeWidgetProjectDirectory->clear();
+		ui->treeWidgetTainData->clear();
+		ui->treeWidgetTrainEvaluation->clear();
+		ui->treeWidgetProjectConfiguration->clear();
+		ui->treeWidgetDataDisplay->clear();
+		return;
+	}
+
 	//更新工程项目树
 	ui->treeWidgetProjectDirectory->clear();
 	for (unsigned int i = 0; i < ProjectDataManager::getProjectList().size(); ++i) {
@@ -175,7 +162,6 @@ void MainWindow::updatePanel()
 	ui->treeWidgetTainData->clear();
 	projectUnit project = ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex];
 	DirectoryTree projectTree = project.projectTree;
-
 
 	TreeNode* videoNode = projectTree.findNode(projectTree.getRoot(), "视频");
 	if (videoNode != nullptr) {
@@ -192,8 +178,6 @@ void MainWindow::updatePanel()
 		}
 	}
 
-
-
 	TreeNode* audioNode = projectTree.findNode(projectTree.getRoot(), "音频");
 	if (audioNode != nullptr) {
 		QTreeWidgetItem* audioItem = new QTreeWidgetItem(ui->treeWidgetTainData);
@@ -209,8 +193,6 @@ void MainWindow::updatePanel()
 		}
 	}
 
-
-
 	TreeNode* flightParameterNode = projectTree.findNode(projectTree.getRoot(), "飞行参数数据");
 	if (flightParameterNode != nullptr) {
 		QTreeWidgetItem* flightParameterItem = new QTreeWidgetItem(ui->treeWidgetTainData);
@@ -225,8 +207,6 @@ void MainWindow::updatePanel()
 			flightParameterItem->addChild(flightParameterSubItem);
 		}
 	}
-
-
 
 	TreeNode* eventAndTimeNode = projectTree.findNode(projectTree.getRoot(), "事件及其时间信息");
 	if (eventAndTimeNode != nullptr) {
@@ -319,8 +299,11 @@ void MainWindow::on_actionOpen_triggered()
 {
 	//test
 	//QString fileName = QFileDialog::getOpenFileName(this, "Open .xljp File", "", "Xljp Files (*.xljp)");
-	QString fileName = QString("C:/Users/Aiopr/Desktop/工程/test.xljp");
+	QString fileName = QString("C:/Users/Aiopr/Desktop/工程/测试.xljp");
 
+	if (fileName.isEmpty()) {
+		return;
+	}
 	QFile file(fileName);
 	json doc;
 
@@ -350,7 +333,7 @@ void MainWindow::on_actionOpen_triggered()
 	}
 
 	projectDataManager->addProject(doc, projectPath);
-	ProjectDataManager::projectCurrentIndex = ProjectDataManager::getProjectList().size() - 1;	
+	ProjectDataManager::projectCurrentIndex =(int) ProjectDataManager::getProjectList().size() - 1;	
 	updatePanel();
 	ui->treeWidgetProjectDirectory->setCurrentItem(ui->treeWidgetProjectDirectory->topLevelItem(static_cast<int>(ProjectDataManager::projectCurrentIndex)));
 
@@ -380,7 +363,10 @@ bool MainWindow::isProjectTreeFilesExist(const QString& base_path, const json& s
 
 void MainWindow::on_actionClose_triggered()
 {
-
+	on_actionSave_triggered();
+	ProjectDataManager::removeProject(ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex].projectName);
+	ProjectDataManager::projectCurrentIndex  -= 1;
+	updatePanel();
 }
 
 void MainWindow::onProjectActionTriggered(bool checked)
@@ -733,5 +719,124 @@ void MainWindow::on_treeWidgetProjectDirectory_currentItemChanged(QTreeWidgetIte
 
 
 	}
+}
+
+bool saveCurrentProject() {
+	std::string projectName = ProjectDataManager::getProject(ProjectDataManager::projectCurrentIndex).projectName;
+	json j = ProjectDataManager::toJson(projectName);
+	std::string path = ProjectDataManager::getProject(ProjectDataManager::projectCurrentIndex).projectPath;
+	path += "/" + projectName + ".xljp";
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	std::wstring wPath = converter.from_bytes(path);
+	std::ofstream file(wPath);
+	file << j.dump();
+	file.close();
+	return true;
+}
+
+bool saveAllProject() {
+	std::vector< projectUnit> projectList = ProjectDataManager::getProjectList();
+	for (size_t i = 0; i < projectList.size(); ++i) {
+		json j = ProjectDataManager::toJson(i);
+		std::string path = projectList[i].projectPath;
+		path += "/" + projectList[i].projectName + ".xljp";
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		std::wstring wPath = converter.from_bytes(path);
+		std::ofstream file(wPath);
+		file << j.dump();
+		file.close();
+	}
+	return true;
+}
+
+
+void MainWindow::on_actionSave_triggered()
+{
+	std::vector< projectUnit> projectList = ProjectDataManager::getProjectList();
+
+	if (projectList.size() == 0) {
+		QMessageBox::warning(this, "警告", "没有打开的工程!");
+		return;
+	}
+
+	if (projectList.size() == 1) {
+		QMessageBox::StandardButton reply;
+		reply = QMessageBox::question(this, "保存工程", "您想要保存对当前工程的更改吗？",QMessageBox::Yes  | QMessageBox::Cancel);
+		if (reply == QMessageBox::Yes) {
+			saveCurrentProject();
+			QMessageBox::information(this, "提示", "保存成功!");
+		}
+		else if (reply == QMessageBox::Cancel) {
+			return;
+		}
+	}
+	else {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle("保存工程");
+		msgBox.setText("您想要保存当前工程还是所有工程？");
+		msgBox.setIcon(QMessageBox::Question);
+		QAbstractButton* saveCurrentButton = msgBox.addButton("当前工程", QMessageBox::YesRole);
+		QAbstractButton* saveAllButton = msgBox.addButton("所有工程", QMessageBox::NoRole);
+		QAbstractButton* cancelButton = msgBox.addButton("取消", QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == saveCurrentButton) {
+			saveCurrentProject();
+			QMessageBox::information(this, "提示", "保存成功!");
+		}
+		else if (msgBox.clickedButton() == saveAllButton) {
+			saveAllProject();
+		}	
+		else if (msgBox.clickedButton() == cancelButton) {
+			return;
+		}
+	}
+}
+
+
+void MainWindow::on_actionDelete_triggered()
+{
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "删除工程", "当前工程删除后不可恢复，您确定要删除吗？", QMessageBox::Yes | QMessageBox::Cancel);
+	if (reply == QMessageBox::Yes) {
+		std::string projectPath = ProjectDataManager::getProject(ProjectDataManager::projectCurrentIndex).projectPath;
+		try {
+			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			std::wstring wPath = converter.from_bytes(projectPath);
+			std::filesystem::remove_all(wPath);
+			ProjectDataManager::removeProject(ProjectDataManager::getProjectList()[ProjectDataManager::projectCurrentIndex].projectName);
+			ProjectDataManager::projectCurrentIndex -= 1;
+			updatePanel();
+		}
+		catch (const std::filesystem::filesystem_error& ) {
+			QMessageBox::critical(this, "错误", "删除工程文件时发生错误。");
+		}
+	}
+	else if (reply == QMessageBox::Cancel) {
+		return;
+	}
+}
+
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+
+}
+
+
+void MainWindow::on_actionImport_triggered()
+{
+
+}
+
+
+void MainWindow::on_actionExport_triggered()
+{
+
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+
 }
 

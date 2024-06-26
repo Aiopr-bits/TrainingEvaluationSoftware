@@ -29,9 +29,11 @@ public:
     static projectUnit getProject(std::string projectName);
     static projectUnit getProject(size_t index);
     static bool isProjectModified(projectUnit project);
+	static json toJson(size_t index);
+	static json toJson(std::string projectName);
 
     static std::vector<projectUnit> projectList;
-    static size_t projectCurrentIndex;
+    static int projectCurrentIndex;
 
     //测试用
     static void printProjectList();

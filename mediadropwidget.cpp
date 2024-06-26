@@ -1,6 +1,7 @@
 #include "mediadropwidget.h"
 #include<QAudioOutput>
 #include <iostream>
+#include <QMessageBox>
 
 MediaDropWidget::MediaDropWidget(QWidget* parent)
 	: QWidget(parent),
@@ -66,7 +67,7 @@ void MediaDropWidget::dropEvent(QDropEvent* event) {
 			playAudio(filePath);
 		}
 		else {
-			// Handle unsupported file types
+			QMessageBox::warning(this, "警告", "不支持该文件格式的打开: " + extension);
 		}
 	}
 }

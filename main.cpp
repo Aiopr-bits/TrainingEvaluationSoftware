@@ -9,12 +9,12 @@ int main(int argc, char *argv[]){
     SetConsoleOutputCP(CP_UTF8);
 
     QApplication a(argc, argv);
-    QString qss;
-    QFile file(":/QSS/resource/ElegantDark.qss");
-    file.open(QFile::ReadOnly);
-    qss=file.readAll();
-    file.close();
-    a.setStyleSheet(qss);
+    //QString qss;
+    //QFile file(":/QSS/resource/ElegantDark.qss");
+    //file.open(QFile::ReadOnly);
+    //qss=file.readAll();
+    //file.close();
+    //a.setStyleSheet(qss);
     MainWindow w;
 
     w.show();

@@ -30,7 +30,7 @@ public:
     bool remveNode(TreeNode* node, const std::string& value);
     void printTraversal(TreeNode* node ,int path = 0);
     void fromJson(const json& j, TreeNode* node);
-    json toJson(TreeNode* node);
+    json toJson(TreeNode* node) const;
 
 private:
     TreeNode* root;

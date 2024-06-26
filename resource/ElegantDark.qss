@@ -80,7 +80,7 @@ QLabel {
 
 QProgressBar {
 	text-align: center;
-	color: rgb(240, 240, 240);
+        color: rgb(20, 20, 20);
 	border-width: 1px; 
 	border-radius: 10px;
 	border-color: rgb(58, 58, 58);
@@ -92,11 +92,13 @@ QProgressBar::chunk {
 	background-color: qlineargradient(spread:pad, x1:0.5, y1:0.7, x2:0.5, y2:0.3, stop:0 rgba(87, 97, 106, 255), stop:1 rgba(93, 103, 113, 255));
 	border-radius: 5px;
 }
+
 QMenuBar {
-	background:rgb(82, 82, 82);
+        background:rgb(79,79,79);
 }
+
 QMenuBar::item {
-	color:rgb(223,219,210);
+	color:rgb(255,255,255);
 	spacing: 3px;
 	padding: 1px 4px;
 	background: transparent;
@@ -105,6 +107,7 @@ QMenuBar::item {
 QMenuBar::item:selected {
 	background:rgb(115, 115, 115);
 }
+
 QMenu::item:selected {
 	color:rgb(255,255,255);
 	border-width:2px;
@@ -120,32 +123,37 @@ QMenu::item:selected {
 	border-bottom-color: rgb(58, 58, 58);
 	border-bottom-width: 1px;
 }
+
 QMenu::item {
-	color:rgb(223,219,210);
+	color:rgb(255,255,255);
 	background-color:rgb(78,78,78);
 	padding-left:20px;
 	padding-top:4px;
 	padding-bottom:4px;
 	padding-right:10px;
 }
+
 QMenu{
 	background-color:rgb(78,78,78);
 }
+
 QTabWidget {
-	color:rgb(0,0,0);
-	background-color:rgb(247,246,246);
+	color:rgb(255,255,255);
+	background-color:rgb(255,255,255);
 }
+
 QTabWidget::pane {
-		border-color: rgb(77,77,77);
-		background-color:rgb(101,101,101);
+		border-color: rgb(0,0,0);
+		background-color:rgb(78,78,78);
 		border-style: solid;
 		border-width: 1px;
     	border-radius: 6px;
 }
+
 QTabBar::tab {
 	padding:2px;
-	color:rgb(250,250,250);
-  	background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(77, 77, 77, 255), stop:1 rgba(97, 97, 97, 255));
+	color:rgb(255,255,255);
+  	background-color:rgb(187,187,187);
 	border-style: solid;
 	border-width: 2px;
   	border-top-right-radius:4px;
@@ -155,6 +163,7 @@ QTabBar::tab {
 	border-left-color: qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:0.4, y2:0.5, stop:0 rgba(115, 115, 115, 255), stop:1 rgba(95, 92, 93, 255));
 	border-bottom-color: rgb(101,101,101);
 }
+
 QTabBar::tab:selected, QTabBar::tab:last:selected, QTabBar::tab:hover {
   	background-color:rgb(101,101,101);
   	margin-left: 0px;
@@ -198,7 +207,7 @@ QStatusBar {
 }
 
 QTreeWidget {
-    background-color: rgb(82, 82, 82);
+    background-color: rgb(79,79,79);
     border: 1px solid rgb(58, 58, 58);
     color: rgb(255, 255, 255);
 }
@@ -210,14 +219,15 @@ QTreeWidget {
 
 
 QTreeWidget::item {
-    background-color: rgb(42, 42, 42);
+    background-color: rgb(79,79,79);
     padding: 1px;
     border: 1px solid transparent;
 }
 
+
 QTreeWidget::item:selected {
-    background-color: rgb(87, 97, 106);
-    color: rgb(255, 255, 255);
+    background-color: rgb(230,245,255);
+    color: rgb(35, 139, 255);
 }
 
 QTreeWidget::item:hover {
@@ -226,21 +236,21 @@ QTreeWidget::item:hover {
 
 /* 滚动条样式 */
 QScrollBar:vertical {
-    background-color: rgb(82, 82, 82);
+    background-color: rgb(79,79,79);
     width: 16px;
     margin: 15px 3px 15px 3px;
     border: 1px solid rgb(58, 58, 58);
 }
 
 QScrollBar::handle:vertical {
-    background-color: rgb(42, 42, 42);
+    background-color: rgb(210, 210, 210);
     min-height: 20px;
     border: 1px solid rgb(58, 58, 58);
     border-radius: 4px;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-    background-color: rgb(82, 82, 82);
+    background-color: rgb(79,79,79);
     height: 15px;
     subcontrol-origin: margin;
     border: 1px solid rgb(58, 58, 58);
@@ -256,7 +266,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 }
 
 QScrollBar:horizontal {
-    background-color: rgb(82, 82, 82);
+    background-color: rgb(79,79,79);
     height: 16px;
     margin: 3px 15px 3px 15px;
     border: 1px solid rgb(58, 58, 58);
@@ -270,7 +280,7 @@ QScrollBar::handle:horizontal {
 }
 
 QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
-    background-color: rgb(82, 82, 82);
+    background-color: rgb(79,79,79);
     width: 15px;
     subcontrol-origin: margin;
     border: 1px solid rgb(58, 58, 58);
@@ -287,7 +297,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 /* 表头样式 */
 QHeaderView::section {
-    background-color: rgb(79, 79, 79);
+    background-color: rgb(187,187,187);
     color: rgb(255, 255, 255);
     padding: 4px;
     border: 1px solid rgb(58, 58, 58);

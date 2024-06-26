@@ -1,9 +1,11 @@
 #include "projectdatamanager.h"
 #include <QMessageBox>
+#include <codecvt>
+#include <locale> 
 
 //静态变量初始化
 std::vector<projectUnit> ProjectDataManager::projectList = std::vector<projectUnit>();
-size_t ProjectDataManager::projectCurrentIndex = -1;
+int ProjectDataManager::projectCurrentIndex = -1;
 
 ProjectDataManager::ProjectDataManager()
 {
@@ -70,6 +72,9 @@ void ProjectDataManager::addProject(json json, QString projectPath)
 
 void ProjectDataManager::removeProject(std::string projectName)
 {
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    std::wstring wProjectName = converter.from_bytes(projectName);
+
     for (std::vector<projectUnit>::iterator it = projectList.begin(); it != projectList.end(); ++it)
     {
         if (it->projectName == projectName)
@@ -148,6 +153,40 @@ bool ProjectDataManager::isProjectModified(projectUnit project)
         isModified = true;
     }
     return isModified;
+}
+
+json ProjectDataManager::toJson(size_t index)
+{
+	projectUnit project = projectList[index];
+	json j;
+	j["projectName"] = project.projectName;
+	j["airplaneNumber"] = project.airplaneNumber;
+	j["projectTree"] = project.projectTree.toJson(project.projectTree.getRoot());
+	j["readWritePermission"] = project.readWritePermission;
+	j["applicableTerminals"] = project.applicableTerminals;
+	j["softwareVersion"] = project.softwareVersion;
+	j["databaseVersion"] = project.databaseVersion;
+	return j;
+}
+
+json ProjectDataManager::toJson(std::string projectName)
+{
+    for (const auto& project : projectList)
+    {
+        if (project.projectName == projectName)
+        {
+            json j;
+            j["projectName"] = project.projectName;
+            j["airplaneNumber"] = project.airplaneNumber;
+            j["projectTree"] = project.projectTree.toJson(project.projectTree.getRoot());
+            j["readWritePermission"] = project.readWritePermission;
+            j["applicableTerminals"] = project.applicableTerminals;
+            j["softwareVersion"] = project.softwareVersion;
+            j["databaseVersion"] = project.databaseVersion;
+            return j;
+        }
+    }
+    return json{};
 }
 
 void ProjectDataManager::printProjectList()

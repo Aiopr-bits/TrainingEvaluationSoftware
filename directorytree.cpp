@@ -95,7 +95,7 @@ void DirectoryTree::fromJson(const json& j, TreeNode* node)
 
 }
 
-json DirectoryTree::toJson(TreeNode* node)
+json DirectoryTree::toJson(TreeNode* node) const
 {
 	json j;
 	for (auto child : node->children)

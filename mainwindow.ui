@@ -273,15 +273,6 @@
           </widget>
          </item>
          <item>
-          <widget class="CustomTreeWidget" name="treeWidgetTrainEvaluation">
-           <column>
-            <property name="text">
-             <string>训练评价</string>
-            </property>
-           </column>
-          </widget>
-         </item>
-         <item>
           <widget class="QTreeWidget" name="treeWidgetDataDisplay">
            <column>
             <property name="text">
@@ -323,6 +314,15 @@
              <string>飞行时长     2h</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="CustomTreeWidget" name="treeWidgetTrainEvaluation">
+           <column>
+            <property name="text">
+             <string>训练评价</string>
+            </property>
+           </column>
           </widget>
          </item>
         </layout>
@@ -484,6 +484,9 @@
   <action name="actionSave">
    <property name="text">
     <string>保存</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionSaveAs">
